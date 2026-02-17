@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { sendEmail } from './sendEmail';
+import { sendHackTUESEmail } from './sendEmail';
 import { createTransportFromEnv } from './transport';
 
 async function main() {
@@ -17,10 +17,10 @@ async function main() {
 
     console.log('Sending email...');
     // Send email using the transport
-    await sendEmail(transport, {
+    await sendHackTUESEmail(transport, {
       to: 'martin.v.velchev.2022@elsys-bg.org',
       subject: 'Test Email',
-      from: 'team@mail.hack-tues.com',
+      fromName: 'team',
       text: 'This is a plain text email',
       html: '<h1>This is an HTML email</h1><p>This is a test email sent via nodemailer.</p>',
     });
