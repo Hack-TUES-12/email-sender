@@ -1,0 +1,27 @@
+{
+  "name": "email-sender",
+  "version": "1.0.0",
+  "description": "TypeScript script to send emails via SMTP using nodemailer",
+  "main": "sendEmail.ts",
+  "scripts": {
+    "build": "tsc",
+    "example": "tsx example.ts"
+  },
+  "keywords": [
+    "email",
+    "smtp",
+    "nodemailer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "nodemailer": "^6.9.8"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.14",
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0"
+  }
+}
