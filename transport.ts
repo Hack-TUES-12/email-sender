@@ -33,8 +33,6 @@ export async function createTransport(
       connectionTimeout: 60000, // 60 seconds
       greetingTimeout: 30000, // 30 seconds
       socketTimeout: 60000, // 60 seconds
-      debug: true, // Enable debug output
-      logger: true, // Enable logging
       tls: {
         // Don't reject unauthorized certificates (useful for some SMTP servers)
         rejectUnauthorized: false,

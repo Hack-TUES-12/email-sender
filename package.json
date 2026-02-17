@@ -5,7 +5,8 @@
   "main": "sendEmail.ts",
   "scripts": {
     "build": "tsc",
-    "example": "tsx example.ts"
+    "example": "tsx example.ts",
+    "send-declarations": "tsx sendDeclarations.ts"
   },
   "keywords": [
     "email",

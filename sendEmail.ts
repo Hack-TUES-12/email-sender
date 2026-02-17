@@ -33,34 +33,24 @@ export async function sendEmail(
   };
 
   try {
-    console.log('Attempting to send email to:', mailOptions.to);
-    console.log('From:', mailOptions.from);
+    const recipient = Array.isArray(emailOptions.to) ? emailOptions.to.join(', ') : emailOptions.to;
+    console.log(`Sending to ${recipient}`);
     
     // Send email with timeout handling
-    const info = await Promise.race([
+    await Promise.race([
       transport.sendMail(mailOptions),
       new Promise((_, reject) => 
         setTimeout(() => reject(new Error('Email send timeout after 60 seconds')), 60000)
       )
-    ]) as any;
-
-    console.log('Email sent successfully!');
-    console.log('Message ID:', info.messageId);
+    ]);
   } catch (error: any) {
-    console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      command: error.command,
-      response: error.response,
-      responseCode: error.responseCode,
-    });
     throw error;
   }
 }
 
 
 
-interface HackTUESEmailOptions {
+export interface HackTUESEmailOptions {
   to: string | string[];
   subject: string;
   text?: string;
