@@ -5,7 +5,7 @@ interface EmailOptions {
   subject: string;
   text?: string;
   html?: string;
-  from?: string;
+  from?: string | { name: string; address: string; };
   replyTo?: string;
 }
 
@@ -30,6 +30,11 @@ export async function sendEmail(
     text: emailOptions.text,
     html: emailOptions.html,
     replyTo: emailOptions.replyTo,
+    headers: {
+      'List-Unsubscribe': '<mailto:hacktues@elsys-bg.org>',
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+      'Precedence': 'bulk',
+    }
   };
 
   try {
@@ -55,7 +60,7 @@ export interface HackTUESEmailOptions {
   subject: string;
   text?: string;
   html?: string;
-  fromName?: string; // Default: "team"
+  fromName?: string // Default: "team"
 }
 
 /**
@@ -79,6 +84,10 @@ export async function sendHackTUESEmail(
 
   const fromName = emailOptions.fromName || 'team';
   const fromAddress = `${fromName}@${domain}`;
+  const fromWithName = {
+    name: 'Hack TUES 12 Team',
+    address: fromAddress
+  };
 
   const replyToAddress = process.env.REPLY_TO_ADDRESS;
 
@@ -88,7 +97,7 @@ export async function sendHackTUESEmail(
     subject: emailOptions.subject,
     text: emailOptions.text,
     html: emailOptions.html,
-    from: fromAddress,
+    from: fromWithName,
     replyTo: replyToAddress,
   });
 }

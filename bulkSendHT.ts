@@ -108,8 +108,8 @@ export async function bulkSendHT(
 
         // Pause for 2 seconds every 5 recipients
         if ((i + 1) % 5 === 0 && i < recipients.length - 1) {
-          console.log('--- Pausing for 2 seconds (every 5 emails) ---');
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          console.log('--- Pausing for 5 seconds (every 5 emails) ---');
+          await new Promise(resolve => setTimeout(resolve, 5000));
         }
       } catch (error: any) {
         console.error(`\n✗ Failed to send email ${emailNumber} to ${recipient}`);
