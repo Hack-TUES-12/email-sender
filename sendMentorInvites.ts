@@ -1,11 +1,15 @@
 import { bulkSendHT } from './bulkSendHT';
 import { HackTUESEmailOptions } from './sendEmail';
+import { readMentors } from './readMentors';
 
 /**
  * Main function to send declaration emails
  */
 async function sendMentorInvites() {
   try {
+    const mentors = readMentors();
+    console.log('Mentors:', mentors);
+
     // Define email options
     const emailOptions: Omit<HackTUESEmailOptions, 'to'> = {
       subject: 'Hack TUES 12 ментори',
