@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "example": "tsx example.ts",
-    "send-declarations": "tsx sendDeclarations.ts"
+    "send-declarations": "tsx sendDeclarations.ts",
+    "send-mentor-invites": "tsx sendMentorInvites.ts"
   },
   "keywords": [
     "email",
