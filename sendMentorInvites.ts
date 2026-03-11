@@ -38,6 +38,8 @@ async function sendMentorInvites() {
 
       <p>Отделно ще се радваме, ако се запознаете с наръчника на ментора чрез следния <a href="https://docs.google.com/document/d/1d-mq7hqDUZPCh3DkE96dlyckHsXq8AriQKLNANfpLzA/edit?usp=sharing">survival guide</a>.</p>
 
+      <p>За да продължим комуникацията си занапред, както и с участниците може да се присъедините към нашия Discord сървър. При възникнала грешка може да влезете и от <a href="https://discord.gg/P3UxFqbS">тук</a>.</p>
+
       <p>При въпроси или нужда от съдействие оставаме на разположение.</p>
 
       <p>Очакваме Ви с нетърпение!</p>
