@@ -24,7 +24,7 @@ export function readMentors(filePath?: string): MentorRow[] {
       process.exit(1);
     }
 
-    const email = String(row['email'] ?? '').trim();
+    const email = String(row['имейл'] ?? '').trim();
     const discord_join_token = String(row['discord_join_token'] ?? '').trim();
 
     mentors.push({ email, discord_join_token });
