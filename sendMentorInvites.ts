@@ -8,7 +8,7 @@ async function sendMentorInvites() {
   try {
     // Define email options
     const emailOptions: Omit<HackTUESEmailOptions, 'to'> = {
-      subject: 'Стар Уорс',
+      subject: 'Hack TUES 12 ментори',
       text: `Здравейте,
 
       Благодарим, че ще бъдете ментор на Hack TUES 12! Без Вас събитието не би било същото!
