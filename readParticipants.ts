@@ -40,6 +40,8 @@ export function readParticipants(filePath?: string): Participant[] {
     console.log('All participants have a certificate.');
   }
 
+  console.log(`Found ${participants.length} participants.`)
+
   return participants;
 }
 
