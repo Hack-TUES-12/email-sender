@@ -7,7 +7,8 @@
     "build": "tsc",
     "example": "tsx example.ts",
     "send-declarations": "tsx sendDeclarations.ts",
-    "send-mentor-invites": "tsx sendMentorInvites.ts"
+    "send-mentor-invites": "tsx sendMentorInvites.ts",
+    "send-participant-certificates": "tsx sendCertificates.ts"
   },
   "keywords": [
     "email",

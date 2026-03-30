@@ -1,5 +1,10 @@
 import { Transporter } from 'nodemailer';
 
+interface EmailAttachment {
+  filename: string;
+  path: string;
+}
+
 interface EmailOptions {
   to: string | string[];
   subject: string;
@@ -7,6 +12,7 @@ interface EmailOptions {
   html?: string;
   from?: string | { name: string; address: string; };
   replyTo?: string;
+  attachments?: EmailAttachment[];
 }
 
 /**
@@ -30,6 +36,7 @@ export async function sendEmail(
     text: emailOptions.text,
     html: emailOptions.html,
     replyTo: emailOptions.replyTo,
+    attachments: emailOptions.attachments,
     headers: {
       'List-Unsubscribe': '<mailto:hacktues@elsys-bg.org>',
       'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
@@ -60,7 +67,8 @@ export interface HackTUESEmailOptions {
   subject: string;
   text?: string;
   html?: string;
-  fromName?: string // Default: "team"
+  fromName?: string; // Default: "team"
+  attachments?: EmailAttachment[];
 }
 
 /**
@@ -99,5 +107,6 @@ export async function sendHackTUESEmail(
     html: emailOptions.html,
     from: fromWithName,
     replyTo: replyToAddress,
+    attachments: emailOptions.attachments,
   });
 }
