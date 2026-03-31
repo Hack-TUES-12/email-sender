@@ -5,6 +5,7 @@ import { sendHackTUESEmail } from './sendEmail';
 import { readMentors } from './readMentors';
 
 const PHOTOS_URL = "https://drive.google.com/drive/folders/1NG8PXI9g4DabOqBcKyGWGsU9_L2ghObI?usp=share_link"
+const FEEDBACK_FORM_URL = "https://forms.gle/ACJGRwCDxC5Jc6uQ8"
 
 function waitForUserInput(prompt: string): Promise<void> {
   const rl = readline.createInterface({
@@ -27,6 +28,8 @@ function buildEmailOptions(name: string) {
 
 Благодарим ви, че станахте част от дванадесетото издание на Hack TUES! Изключително щастливи сме, че заедно работихме за осъществяването на това емблематично за ТУЕС събитие! Надяваме се догодина отново да помогнете на учениците да реализират един невероятен проект!
 
+Много ще се радваме да попълните формата за обратна връзка тук: ${FEEDBACK_FORM_URL}
+
 Избрани снимки от работните дни на хакатона може да намерите тук: ${PHOTOS_URL}
 
 Благодарим ви отново за участието ви и че заедно написахме история с тазгодишното издание на Hack TUES!
@@ -38,6 +41,8 @@ function buildEmailOptions(name: string) {
       <p>Здравейте, ${name},</p>
 
       <p>Благодарим ви, че станахте част от дванадесетото издание на Hack TUES! Изключително щастливи сме, че заедно работихме за осъществяването на това емблематично за ТУЕС събитие! Надяваме се догодина отново да помогнете на учениците да реализират един невероятен проект!</p>
+
+      <p>Много ще се радваме да попълните формата за обратна връзка <a href="${FEEDBACK_FORM_URL}">тук</a>.</p>
 
       <p>Избрани снимки от работните дни на хакатона може да намерите <a href="${PHOTOS_URL}">тук</a>.</p>
 
