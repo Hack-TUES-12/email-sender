@@ -15,11 +15,26 @@ export function readRecipients(filePath?: string): string[] {
     const fileContent = fs.readFileSync(inputFile, 'utf-8');
     
     // Split by newlines and process
-    const recipients = fileContent
-      .split(/\r?\n/) // Handle both Windows (\r\n) and Unix (\n) line endings
-      .map(line => line.trim()) // Remove leading/trailing whitespace
-      .filter(line => line.length > 0 && line.includes('@')); // Filter out empty lines and invalid emails
-    
+    const lines = fileContent
+      .split(/\r?\n/)
+      .map(line => line.trim().toLowerCase())
+      .filter(line => line.length > 0 && line.includes('@'));
+
+    const seen = new Set<string>();
+    const duplicates: string[] = [];
+    const recipients = lines.filter(email => {
+      if (seen.has(email)) {
+        duplicates.push(email);
+        return false;
+      }
+      seen.add(email);
+      return true;
+    });
+
+    if (duplicates.length > 0) {
+      console.warn(`Warning: Removed ${duplicates.length} duplicate(s): ${duplicates.join(', ')}`);
+    }
+
     console.log(`Read ${recipients.length} recipient(s) from ${inputFile}`);
     
     return recipients;
