@@ -10,7 +10,8 @@
     "send-mentor-invites": "tsx sendMentorInvites.ts",
     "send-participant-certificates": "tsx sendCertificates.ts",
     "send-mentor-gratitude": "tsx sendMentorGratitude.ts",
-    "send-juri-gratitude": "tsx sendJuriGratitude.ts"
+    "send-juri-gratitude": "tsx sendJuriGratitude.ts",
+    "send-tf-info": "tsx sendTF.ts"
   },
   "keywords": [
     "email",
