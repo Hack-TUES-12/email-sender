@@ -4,3 +4,5 @@
 input.txt
 *.xlsx
 /input
+/input-tf
+*.txt
