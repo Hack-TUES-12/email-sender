@@ -12,7 +12,8 @@
     "send-mentor-gratitude": "tsx sendMentorGratitude.ts",
     "send-juri-gratitude": "tsx sendJuriGratitude.ts",
     "send-tf-info": "tsx sendTF.ts",
-    "send-tf-certificates": "tsx sendTFCertificates.ts"
+    "send-tf-certificates": "tsx sendTFCertificates.ts",
+    "send-tf-photos": "tsx sendTFPhotos.ts"
   },
   "keywords": [
     "email",
