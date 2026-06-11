@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import * as path from 'path';
 
 export interface MentorRow {
+  name: string;
   email: string;
   discord_join_token: string;
 }
@@ -24,10 +25,12 @@ export function readMentors(filePath?: string): MentorRow[] {
       process.exit(1);
     }
 
+    // Adjust the column name below to match the header in mentors.xlsx
+    const name = String(row['име'] ?? '').trim();
     const email = String(row['имейл'] ?? '').trim();
     const discord_join_token = String(row['discord_join_token'] ?? '').trim();
 
-    mentors.push({ email, discord_join_token });
+    mentors.push({ name, email, discord_join_token });
   }
 
   return mentors;
