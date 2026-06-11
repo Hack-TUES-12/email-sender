@@ -1,264 +1,128 @@
 # Email Sender
 
-A TypeScript email sending library built with nodemailer, designed for sending bulk emails via SMTP with support for Hack TUES email configuration.
+A TypeScript bulk email tool for Hack TUES events, built on nodemailer. Supports sending declarations, certificates, mentor invites, gratitude emails, and TUES Fest photo links.
 
-## Features
+## Prerequisites
 
-- ✅ Send emails via SMTP using nodemailer
-- ✅ Environment variable-based configuration
-- ✅ Hack TUES email integration with automatic sender address construction
-- ✅ Bulk email sending with recipient file support
-- ✅ Interactive bulk sending workflow with verification steps
-- ✅ Automatic transport creation from environment variables
-- ✅ Support for both text and HTML emails
-- ✅ Reply-to address configuration
-- ✅ Rate limiting (2-second pause every 5 emails)
+- Node.js 18+
+- npm
 
-## Installation
+## Setup
+
+**1. Install dependencies**
 
 ```bash
 npm install
 ```
 
-## Configuration
+**2. Configure environment variables**
 
-### Environment Variables
-
-Create a `.env` file in the project root (use `.env.example` as a template):
+Copy `.env.example` to `.env` and fill in your values:
 
 ```bash
-# SMTP Configuration
-SMTP_HOST=smtp.gmail.com          # Required: SMTP server hostname
-SMTP_PORT=587                      # Required: SMTP server port
-SMTP_SECURE=false                  # Optional: true for 465, false for 587 (auto-detected if not set)
-SMTP_USER=your-email@gmail.com     # Required: SMTP username
-SMTP_PASS=your-app-password         # Required: SMTP password or app password
-
-# Email Configuration
-EMAIL_DOMAIN=mail.hack-tues.com    # Required: Domain for sender addresses
-REPLY_TO_ADDRESS=hacktues@elsys-bg.org  # Optional: Reply-to address
-
-# Test Configuration
-TEST_RECIPIENT=test@example.com    # Required: Test email for verification
+cp .env.example .env
 ```
 
-### Recipients File
+| Variable | Required | Description |
+|---|---|---|
+| `SMTP_HOST` | Yes | SMTP server hostname (e.g. `smtp.gmail.com`) |
+| `SMTP_PORT` | Yes | SMTP port (`587` for STARTTLS, `465` for SSL) |
+| `SMTP_SECURE` | No | `true`/`false` — auto-detected from port if omitted |
+| `SMTP_USER` | Yes | SMTP login username |
+| `SMTP_PASS` | Yes | SMTP password or app password |
+| `EMAIL_DOMAIN` | Yes | Sender domain — emails go out as `{fromName}@{EMAIL_DOMAIN}` |
+| `REPLY_TO_ADDRESS` | No | Reply-to address for all outgoing emails |
+| `TEST_RECIPIENT` | Yes | Your own address for test email verification before bulk sends |
 
-Create an `input.txt` file with one email address per line:
+> For Gmail, generate an [App Password](https://myaccount.google.com/apppasswords) and use it as `SMTP_PASS`.
+
+## Input files
+
+Each script reads recipients from a specific file. Prepare the relevant file before running.
+
+| Script | Input file | Format |
+|---|---|---|
+| `send-declarations` | `input.txt` | One email per line |
+| `send-tf-info` | `input.txt` | One email per line |
+| `send-tf-photos` | `tf-participant-emails.txt` | One email per line |
+| `send-mentor-invites` | `mentors.xlsx` | Excel sheet with mentor data |
+| `send-mentor-gratitude` | `mentors.xlsx` | Excel sheet with mentor data |
+| `send-juri-gratitude` | `juri.xlsx` | Excel sheet with jury data |
+| `send-participant-certificates` | `participants.xlsx` | Excel sheet with participant data |
+| `send-tf-certificates` | `tf-participants.xlsx` + `input-tf/` | Excel sheet + PDF certificates in `input-tf/` named `{Име и Фамилия}.pdf` |
+
+### `input.txt` format
 
 ```
 recipient1@example.com
 recipient2@example.com
-recipient3@example.com
 ```
 
-## Project Structure
+### Excel file columns
+
+- **`mentors.xlsx`** / **`juri.xlsx`**: columns expected by `readMentors.ts` / `readJuri.ts`
+- **`participants.xlsx`**: columns expected by `readParticipants.ts`
+- **`tf-participants.xlsx`**: `Име и Фамилия`, `Email address`
+
+Use the provided `*-fake.xlsx` files as reference examples.
+
+## Running a script
+
+Every script follows an interactive workflow:
+
+1. Reads and displays recipients
+2. Pauses — press **Enter** to continue
+3. Creates SMTP transport and shows configuration
+4. Pauses — press **Enter** to send a test email to `TEST_RECIPIENT`
+5. Pauses — press **Enter** to confirm and send to all recipients
+6. Sends in batches with a short pause every 5 emails to avoid rate limits
+
+```bash
+npm run send-declarations
+npm run send-tf-info
+npm run send-tf-photos
+npm run send-mentor-invites
+npm run send-mentor-gratitude
+npm run send-juri-gratitude
+npm run send-participant-certificates
+npm run send-tf-certificates
+```
+
+## Project structure
 
 ```
 email-sender/
-├── sendEmail.ts          # Core email sending functions
-├── transport.ts          # SMTP transport creation
-├── readRecipients.ts     # Read recipients from file
-├── bulkSendHT.ts         # Bulk email sending workflow
-├── sendDeclarations.ts   # Declaration email sender
-├── example.ts            # Basic usage example
-├── input.txt             # Recipient email addresses (one per line)
-├── .env                  # Environment variables (create from .env.example)
-└── package.json
+├── transport.ts              # SMTP transport factory
+├── sendEmail.ts              # Core send functions
+├── bulkSendHT.ts             # Generic bulk send workflow
+├── readRecipients.ts         # Read emails from .txt file
+├── readMentors.ts            # Read mentors from .xlsx
+├── readJuri.ts               # Read jury from .xlsx
+├── readParticipants.ts       # Read participants from .xlsx
+├── readTFParticipants.ts     # Read TF participants from .xlsx
+├── sendDeclarations.ts       # Send declaration emails
+├── sendMentorInvites.ts      # Send Discord invites to mentors
+├── sendMentorGratitude.ts    # Send gratitude emails to mentors
+├── sendJuriGratitude.ts      # Send gratitude emails to jury
+├── sendCertificates.ts       # Send certificates to participants
+├── sendTF.ts                 # Send TF info emails
+├── sendTFCertificates.ts     # Send certificates to TF participants
+├── sendTFPhotos.ts           # Send TUES Fest photo album link
+├── example.ts                # Minimal usage example
+├── input.txt                 # Recipient list (one email per line)
+├── tf-participant-emails.txt # TF recipient list
+├── input-tf/                 # PDF certificates for TF participants
+├── .env.example              # Environment variable template
+└── tsconfig.json
 ```
 
-## Usage
-
-### Basic Email Sending
-
-```typescript
-import { createTransportFromEnv } from './transport';
-import { sendEmail } from './sendEmail';
-
-// Create transport from environment variables
-const transport = await createTransportFromEnv();
-
-// Send email
-await sendEmail(transport, {
-  to: 'recipient@example.com',
-  subject: 'Test Email',
-  from: 'sender@example.com',
-  text: 'Plain text content',
-  html: '<p>HTML content</p>',
-  replyTo: 'reply@example.com',
-});
-```
-
-### Hack TUES Email Sending
-
-```typescript
-import { createTransportFromEnv } from './transport';
-import { sendHackTUESEmail } from './sendEmail';
-
-const transport = await createTransportFromEnv();
-
-// Send Hack TUES email (from address auto-constructed as {fromName}@{EMAIL_DOMAIN})
-await sendHackTUESEmail(transport, {
-  to: 'recipient@example.com',
-  subject: 'Welcome to Hack TUES',
-  fromName: 'team', // Optional, defaults to 'team'
-  text: 'Welcome message',
-  html: '<h1>Welcome!</h1><p>We\'re excited to have you.</p>',
-});
-```
-
-### Bulk Email Sending
-
-```typescript
-import { bulkSendHT } from './bulkSendHT';
-
-// Send bulk emails with interactive workflow
-await bulkSendHT({
-  subject: 'Hack TUES Newsletter',
-  html: '<p>Newsletter content here</p>',
-  fromName: 'newsletter', // Optional
-});
-```
-
-The `bulkSendHT` function will:
-1. Read recipients from `input.txt`
-2. Prompt for verification
-3. Create SMTP transport
-4. Display transport configuration
-5. Send test email to `TEST_RECIPIENT`
-6. Prompt for confirmation
-7. Send emails to all recipients (with 2-second pause every 5 emails)
-
-### Reading Recipients from File
-
-```typescript
-import { readRecipients } from './readRecipients';
-
-// Read from default input.txt
-const recipients = readRecipients();
-
-// Or specify custom path
-const recipients = readRecipients('./data/emails.txt');
-```
-
-## Scripts
-
-### Development
+## Building
 
 ```bash
-# Run example script
-npm run example
-
-# Run declaration email sender
-npm run send-declarations
-
-# Build TypeScript
 npm run build
 ```
 
-## API Reference
-
-### `createTransport(smtpConfig, verify?)`
-
-Creates a nodemailer transport with SMTP configuration.
-
-**Parameters:**
-- `smtpConfig`: SMTP configuration object
-  - `host`: string - SMTP server hostname
-  - `port`: number - SMTP server port
-  - `secure?`: boolean - Use secure connection (auto-detected for port 465)
-  - `auth`: { user: string, pass: string }
-- `verify?`: boolean - Verify connection on creation (default: false)
-
-**Returns:** `Promise<Transporter>`
-
-### `createTransportFromEnv(verify?)`
-
-Creates a transport from environment variables.
-
-**Parameters:**
-- `verify?`: boolean - Verify connection (default: false)
-
-**Returns:** `Promise<Transporter>`
-
-**Required Env Vars:** `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
-
-### `sendEmail(transport, emailOptions)`
-
-Sends an email using a nodemailer transport.
-
-**Parameters:**
-- `transport`: Transporter - Nodemailer transport instance
-- `emailOptions`: EmailOptions
-  - `to`: string | string[] - Recipient(s)
-  - `subject`: string - Email subject
-  - `text?`: string - Plain text content
-  - `html?`: string - HTML content
-  - `from?`: string - Sender address
-  - `replyTo?`: string - Reply-to address
-
-**Returns:** `Promise<void>`
-
-### `sendHackTUESEmail(transport, emailOptions)`
-
-Sends an email with Hack TUES configuration.
-
-**Parameters:**
-- `transport`: Transporter - Nodemailer transport instance
-- `emailOptions`: HackTUESEmailOptions
-  - `to`: string | string[] - Recipient(s)
-  - `subject`: string - Email subject
-  - `text?`: string - Plain text content
-  - `html?`: string - HTML content
-  - `fromName?`: string - Sender name part (default: "team")
-
-**Returns:** `Promise<void>`
-
-**Note:** From address is constructed as `{fromName}@{EMAIL_DOMAIN}`. Reply-to uses `REPLY_TO_ADDRESS` env var.
-
-### `readRecipients(filePath?)`
-
-Reads email recipients from a file.
-
-**Parameters:**
-- `filePath?`: string - Path to file (default: "input.txt")
-
-**Returns:** `string[]` - Array of email addresses
-
-### `bulkSendHT(emailOptions)`
-
-Sends bulk emails with interactive workflow.
-
-**Parameters:**
-- `emailOptions`: Omit<HackTUESEmailOptions, 'to'>
-  - `subject`: string - Email subject
-  - `text?`: string - Plain text content
-  - `html?`: string - HTML content
-  - `fromName?`: string - Sender name (default: "team")
-
-**Returns:** `Promise<void>`
-
-**Workflow:**
-1. Reads recipients from `input.txt`
-2. Prompts for verification
-3. Creates transport from env vars
-4. Displays configuration
-5. Sends test email
-6. Prompts for confirmation
-7. Sends to all recipients (pauses every 5 emails)
-
-## Error Handling
-
-- All functions throw errors on failure
-- `bulkSendHT` exits immediately if any email fails to send
-- Missing environment variables throw descriptive errors
-- File read errors are caught and re-thrown with context
-
-## Examples
-
-See:
-- `example.ts` - Basic email sending example
-- `sendDeclarations.ts` - Declaration email sender implementation
+Compiles TypeScript to `dist/`.
 
 ## License
 
